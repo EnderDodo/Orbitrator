@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class HealthBar : MonoBehaviour
@@ -8,6 +10,15 @@ public class HealthBar : MonoBehaviour
     [SerializeField] private Gradient gradient;
     [SerializeField] private Slider slider;
     [SerializeField] private Image filling;
+    [FormerlySerializedAs("ownerHealthScript")] [SerializeField] private Health ownerHealth;
+
+    private void Awake()
+    {
+        
+        SetMaxHealth(ownerHealth.maxHealth);
+        ownerHealth.HealthChanged += SetHealth;
+
+    }
 
     public void SetMaxHealth(int maxHealth)
     {
@@ -23,4 +34,6 @@ public class HealthBar : MonoBehaviour
 
         filling.color = gradient.Evaluate(slider.normalizedValue);
     }
+    
+    
 }
