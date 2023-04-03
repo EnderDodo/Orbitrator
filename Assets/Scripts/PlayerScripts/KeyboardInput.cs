@@ -11,15 +11,15 @@ public class KeyboardInput : MonoBehaviour
 
     public event Action<OrbHolder> OrbButtonDown;
 
-    void Awake()
+    private void Awake()
     {
         _orbHolders = GetComponents<OrbHolder>();
     }
 
-    void Update()
+    private void Update()
     {
-        float horizontal = Input.GetAxis("Horizontal"); //"horizontal" may have problems with Unity?
-        float vertical = Input.GetAxis("Vertical");
+        var horizontal = Input.GetAxis("Horizontal"); //"horizontal" may have problems with Unity?
+        var vertical = Input.GetAxis("Vertical");
         movement.Move(Vector3.ClampMagnitude(new Vector3(horizontal, vertical), 1));
 
         foreach (var holder in _orbHolders) //should be remade using new input system 
@@ -30,6 +30,7 @@ public class KeyboardInput : MonoBehaviour
             }
         }
         
+        if (Input.GetKeyDown())
         //spellcast button check is needed
     }
     
