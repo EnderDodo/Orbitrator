@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class PhysicsMovement : MonoBehaviour
 {
@@ -19,6 +18,12 @@ public class PhysicsMovement : MonoBehaviour
         Vector3 offset = slider.Project(direction) * (speed * Time.deltaTime);
 
         _rigidBody.MovePosition(_rigidBody.position + offset);
+        
+        // if (CompareTag("Player"))
+        // Debug.Log("teehee");
+        
         //transform.position += offset;
+        //_rigidBody.AddForce(offset);
+        //transform.Translate(offset);
     }
 }

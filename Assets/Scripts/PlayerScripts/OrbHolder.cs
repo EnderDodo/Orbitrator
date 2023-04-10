@@ -6,5 +6,5 @@ using UnityEngine;
 public class OrbHolder : MonoBehaviour
 {
     [SerializeField] [CanBeNull] public Orb orb;
-    [SerializeField] public KeyCode key;
+    [SerializeField] public KeyCode orbKey;
 }

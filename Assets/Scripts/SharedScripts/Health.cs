@@ -10,16 +10,19 @@ public class Health : MonoBehaviour
 
     public Action<int> HealthChanged;
     
-    void Update()
+    private void Awake()
     {
-        
+        _currHealth = maxHealth;
     }
 
-    void ApplyDamage(int damage)
+    public void ApplyDamage(int damage)
     {
         _currHealth -= damage;
-        if (_currHealth < 0)
+        if (_currHealth <= 0)
+        {
             _currHealth = 0;
+            Destroy(gameObject);
+        }
         if (_currHealth > maxHealth) //what if someone will inflict negative damage???
             _currHealth = maxHealth;
             

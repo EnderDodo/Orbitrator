@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aeda43dc09374900a45041dcbc45b641, type: 3}
+  m_Name: Stone
+  m_EditorClassIdentifier: 
+  priority: 1
+  baseDamage: 20
+  baseSpeed: 8
+  instantiatedObject: {fileID: 3188113425771065331, guid: fba52505dc0b62c49a78b4f7a66a66d1, type: 3}
+  particleMaterial: {fileID: 0}
+  pickupAnalogue: {fileID: 0}
+  amountInCurrentSpell: 0
+  baseExplosionRadius: 2

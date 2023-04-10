@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,22 +16,24 @@ public class SurfaceSlider : MonoBehaviour
         return direction;
     }
 
-    private void OnCollisionEnter(Collision collision)
+    
+    private void OnCollisionStay(Collision collision)
     {
         _normal = collision.contacts[0].normal;
     }
 
     private void OnCollisionExit(Collision collision)
     {
-        _normal = new Vector3(0, 0, 0);
+        _normal = Vector3.zero;
     }
 
 
     private void OnDrawGizmos()
     {
+        var pos = transform.position;
         Gizmos.color = Color.white;
-        Gizmos.DrawLine(transform.position, transform.position + _normal * 10);
+        Gizmos.DrawLine(pos, pos + _normal * 10);
         Gizmos.color = Color.red;
-        Gizmos.DrawLine(transform.position, transform.position + _direction * 10);
+        Gizmos.DrawLine(pos, pos + _direction * 10);
     }
 }

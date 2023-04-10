@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2274606019142963636}
   - component: {fileID: 2274606019142963639}
-  - component: {fileID: 4700372934638117848}
   - component: {fileID: 2274606019142963596}
   - component: {fileID: 2274606019142963599}
   - component: {fileID: 2274606019142963598}
@@ -97,19 +96,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!65 &4700372934638117848
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2274606019142963638}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 0
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 5}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!136 &2274606019142963596
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -152,7 +138,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d97b257e244d7a4e9feaf9c9e9f77ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movement: {fileID: 2274606019142963633}
 --- !u!114 &2274606019142963633
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -191,7 +176,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 147da1e5127d92d41bcd43c09f5557aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 1000
+  maxHealth: 250
 --- !u!114 &7727503083173091974
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -204,6 +189,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38b74c57834c8ab439bf5223fbad8d9a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CastKey: 323
   maxSpellLength: 5
 --- !u!114 &9046216415930431348
 MonoBehaviour:
@@ -218,7 +204,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   orb: {fileID: 0}
-  key: 257
+  orbKey: 257
 --- !u!114 &3233702518852518940
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -232,7 +218,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   orb: {fileID: 0}
-  key: 258
+  orbKey: 258
 --- !u!114 &8084338981315326621
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -246,7 +232,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   orb: {fileID: 0}
-  key: 259
+  orbKey: 259
 --- !u!114 &2751984060260237138
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -260,7 +246,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   orb: {fileID: 0}
-  key: 260
+  orbKey: 260
 --- !u!114 &7613652751858648868
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -274,4 +260,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   orb: {fileID: 0}
-  key: 261
+  orbKey: 261

@@ -14,10 +14,8 @@ public class HealthBar : MonoBehaviour
 
     private void Awake()
     {
-        
         SetMaxHealth(ownerHealth.maxHealth);
         ownerHealth.HealthChanged += SetHealth;
-
     }
 
     public void SetMaxHealth(int maxHealth)
@@ -31,7 +29,7 @@ public class HealthBar : MonoBehaviour
     public void SetHealth(int currHealth)
     {
         slider.value = currHealth;
-
+        Debug.Log(currHealth);
         filling.color = gradient.Evaluate(slider.normalizedValue);
     }
     
