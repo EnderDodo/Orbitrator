@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Diagnostics;
 
 public class PhysicsMovement : MonoBehaviour
 {
@@ -18,12 +20,21 @@ public class PhysicsMovement : MonoBehaviour
         Vector3 offset = slider.Project(direction) * (speed * Time.deltaTime);
 
         _rigidBody.MovePosition(_rigidBody.position + offset);
-        
+        //_rigidBody.velocity = offset;
+
         // if (CompareTag("Player"))
         // Debug.Log("teehee");
-        
+
         //transform.position += offset;
         //_rigidBody.AddForce(offset);
         //transform.Translate(offset);
+    }
+
+    public void OnDrawGizmos()
+    {
+        var pos = transform.position;
+        var vel = _rigidBody.velocity;
+        Gizmos.color = Color.blue;
+        Gizmos.DrawLine(pos, pos + vel * 10);
     }
 }

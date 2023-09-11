@@ -7,7 +7,13 @@ public class SurfaceSlider : MonoBehaviour
 {
     private Vector3 _normal;
     private Vector3 _direction;
-    
+    private Rigidbody _rigidbody;
+
+    public void Awake()
+    {
+        _rigidbody = GetComponent<Rigidbody>();
+    }
+
     public Vector3 Project(Vector3 direction)
     {
         _direction = direction;
@@ -25,6 +31,7 @@ public class SurfaceSlider : MonoBehaviour
     private void OnCollisionExit(Collision collision)
     {
         _normal = Vector3.zero;
+        _rigidbody.velocity = Vector3.zero;
     }
 
 
