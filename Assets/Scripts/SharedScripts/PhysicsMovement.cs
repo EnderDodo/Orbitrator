@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Diagnostics;
 
@@ -30,11 +31,11 @@ public class PhysicsMovement : MonoBehaviour
         //transform.Translate(offset);
     }
 
-    public void OnDrawGizmos()
-    {
-        var pos = transform.position;
-        var vel = _rigidBody.velocity;
-        Gizmos.color = Color.blue;
-        Gizmos.DrawLine(pos, pos + vel * 10);
-    }
+    // public void OnDrawGizmos()
+    // {
+    //     var pos = transform.position;
+    //     var vel = _rigidBody.velocity;
+    //     Gizmos.color = Color.blue;
+    //     Gizmos.DrawLine(pos, pos + vel * 10);
+    // }
 }

@@ -1,47 +1,24 @@
 using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class KeyboardInput : MonoBehaviour
 {
+    private InputActions _inputActions;
     private PhysicsMovement _movement;
-
-    private OrbHolder[] _orbHolders;
-    private SpellSystem _spellSystem;
-
-    public event Action<OrbHolder> OrbKeyDown;
-    public event Action CastKeyDown;
 
     private void Awake()
     {
         _movement = GetComponent<PhysicsMovement>();
-        _orbHolders = GetComponents<OrbHolder>();
-        _spellSystem = GetComponent<SpellSystem>();
+        
+        _inputActions = new InputActions();
+        _inputActions.PlayerDefault.Enable();
     }
 
     private void FixedUpdate()
     {
-        var horizontal = Input.GetAxis("Horizontal"); //"horizontal" may have problems with Unity?
-        var vertical = Input.GetAxis("Vertical");
-
-        if (horizontal != 0 || vertical != 0)
-            _movement.Move(Vector3.ClampMagnitude(new Vector3(horizontal, vertical), 1));
+        var inputVector = _inputActions.PlayerDefault.Movement.ReadValue<Vector2>();
+        _movement.Move(new Vector3(inputVector.x, inputVector.y));
     }
 
-    private void Update()
-    {
-        foreach (var holder in _orbHolders) //should be remade using new input system 
-        {
-            if (Input.GetKeyDown(holder.orbKey))
-            {
-                OrbKeyDown?.Invoke(holder);
-                //Debug.Log("Orb Key pressed!");
-            }
-        }
-
-        if (Input.GetKeyDown(_spellSystem.CastKey))
-        {
-            CastKeyDown?.Invoke();
-            Debug.Log("Cast Key pressed!");
-        }
-    }
 }

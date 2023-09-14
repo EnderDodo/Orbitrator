@@ -1,52 +1,68 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class SpellSystem : MonoBehaviour
 {
-    private KeyboardInput _input;
-    [SerializeField] public KeyCode CastKey;
-    
+    private InputActions _inputActions;
+    private OrbHolder[] _orbHolders;
+
     [SerializeField] private int maxSpellLength;
 
     private List<Orb> _orbsToCast; //should be transferred to UI manager
 
-    public Spell CurrSpell;
+    private Spell _currSpell;
 
     private void Awake()
     {
+        _orbHolders = GetComponents<OrbHolder>();
+
         _orbsToCast = new List<Orb>();
-        _input = GetComponent<KeyboardInput>();
-        _input.OrbKeyDown += TryAddToSpell;
-        CurrSpell = new NullSpell();
+        _inputActions = new InputActions();
+        _inputActions.PlayerDefault.Enable();
+        
+        foreach (var holder in _orbHolders)
+        {
+            holder.orbInputAction.action.Enable();
+            holder.orbInputAction.action.performed += holder.TryAddToSpell;
+        }
+
+        _currSpell = new NullSpell();
         Spell.SpellSystem = this;
-        _input.CastKeyDown += CurrSpell.Cast;
-        CurrSpell.WasCasted += ClearSpell;
+        _inputActions.PlayerDefault.CastSpell.performed += CastCurrentSpell;
+        _currSpell.WasCasted += ClearSpell;
     }
 
     private void ClearSpell()
     {
-        _input.CastKeyDown -= CurrSpell.Cast;
-        CurrSpell.WasCasted -= ClearSpell;
-        CurrSpell = new NullSpell();
+        _inputActions.PlayerDefault.CastSpell.performed -= CastCurrentSpell;
+        _currSpell.WasCasted -= ClearSpell;
+        _currSpell = new NullSpell();
         _orbsToCast.Clear();
-        _input.CastKeyDown += CurrSpell.Cast;
-        CurrSpell.WasCasted += ClearSpell;
+        _inputActions.PlayerDefault.CastSpell.performed += CastCurrentSpell;
+        _currSpell.WasCasted += ClearSpell;
     }
 
-    private void TryAddToSpell(OrbHolder holder) //contradicting or mixable orbs are expected
+    private void CastCurrentSpell(InputAction.CallbackContext context)
+    {
+        _currSpell.Cast();
+    }
+
+    public void TryAddToSpell(OrbHolder holder) //contradicting or mixable orbs are expected
     {
         if (holder.orb is not null)
             if (_orbsToCast.Count < maxSpellLength)
             {
                 _orbsToCast.Add(holder.orb);
                 holder.orb.amountInCurrentSpell++;
-                _input.CastKeyDown -= CurrSpell.Cast;
-                CurrSpell.WasCasted -= ClearSpell;
-                CurrSpell = CurrSpell.AddOrb(holder.orb);
-                _input.CastKeyDown += CurrSpell.Cast;
-                CurrSpell.WasCasted += ClearSpell;
+                _inputActions.PlayerDefault.CastSpell.performed -= CastCurrentSpell;
+                _currSpell.WasCasted -= ClearSpell;
+                _currSpell = _currSpell.AddOrb(holder.orb);
+                _inputActions.PlayerDefault.CastSpell.performed += CastCurrentSpell;
+                _currSpell.WasCasted += ClearSpell;
                 Debug.Log("Tried to add orb to spell!");
             }
     }
+
 }

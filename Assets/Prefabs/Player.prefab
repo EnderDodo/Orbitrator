@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 8084338981315326621}
   - component: {fileID: 2751984060260237138}
   - component: {fileID: 7613652751858648868}
+  - component: {fileID: 5286899947281138293}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -224,7 +225,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   orb: {fileID: 0}
-  orbKey: 257
+  orbInputAction: {fileID: 1496966917101116874, guid: 3862b42b664fc774c90fd5e75de4829a, type: 3}
 --- !u!114 &3233702518852518940
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -238,7 +239,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   orb: {fileID: 0}
-  orbKey: 258
+  orbInputAction: {fileID: 5752407970647906121, guid: 3862b42b664fc774c90fd5e75de4829a, type: 3}
 --- !u!114 &8084338981315326621
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -252,7 +253,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   orb: {fileID: 0}
-  orbKey: 259
+  orbInputAction: {fileID: 1717686784304960649, guid: 3862b42b664fc774c90fd5e75de4829a, type: 3}
 --- !u!114 &2751984060260237138
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -266,7 +267,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   orb: {fileID: 0}
-  orbKey: 260
+  orbInputAction: {fileID: -5029163066139915710, guid: 3862b42b664fc774c90fd5e75de4829a, type: 3}
 --- !u!114 &7613652751858648868
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -280,4 +281,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   orb: {fileID: 0}
-  orbKey: 261
+  orbInputAction: {fileID: -2168559343869757778, guid: 3862b42b664fc774c90fd5e75de4829a, type: 3}
+--- !u!114 &5286899947281138293
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2274606019142963638}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b35f81532c08ae4c9e62d3bcc2e32b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  orb: {fileID: 0}
+  orbInputAction: {fileID: 8276140153097101217, guid: 3862b42b664fc774c90fd5e75de4829a, type: 3}

@@ -96,7 +96,7 @@ public class NullSpell : Spell
 
     public override void Cast()
     {
-        Debug.Log("oof");
+        Debug.Log("Null Spell casted!");
         //knocks back
         //chargeable
     }
