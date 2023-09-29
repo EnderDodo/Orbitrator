@@ -4,4 +4,5 @@
 public class ProjectileOrb : Orb
 {
     public float baseExplosionRadius;
+    public float baseRadius;
 }

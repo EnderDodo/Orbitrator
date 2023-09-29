@@ -6,9 +6,11 @@ using UnityEngine.InputSystem;
 public class SpellSystem : MonoBehaviour
 {
     private InputActions _inputActions;
+    private MousePosGetter _mousePosGetter;
     private OrbHolder[] _orbHolders;
 
     [SerializeField] private int maxSpellLength;
+    [SerializeField] private float spellSpawnPointDistance;
 
     private List<Orb> _orbsToCast; //should be transferred to UI manager
 
@@ -16,12 +18,14 @@ public class SpellSystem : MonoBehaviour
 
     private void Awake()
     {
-        _orbHolders = GetComponents<OrbHolder>();
-
-        _orbsToCast = new List<Orb>();
         _inputActions = new InputActions();
         _inputActions.PlayerDefault.Enable();
-        
+
+        _mousePosGetter = GetComponent<MousePosGetter>();
+
+        _orbHolders = GetComponents<OrbHolder>();
+        _orbsToCast = new List<Orb>();
+
         foreach (var holder in _orbHolders)
         {
             holder.orbInputAction.action.Enable();
@@ -65,4 +69,25 @@ public class SpellSystem : MonoBehaviour
             }
     }
 
+    public Vector3 GetPointSpellSpawnPoint()
+    {
+        return _mousePosGetter.GetMousePosition();
+    }
+
+    public Vector3 GetDirectedSpellDirection(out Vector3 playerPosition)
+    {
+        playerPosition = transform.position;
+        playerPosition.z = 0f;
+        var mouseWorldPosition = _mousePosGetter.GetMousePosition();
+        mouseWorldPosition.z = 0f;
+        var direction = (mouseWorldPosition - playerPosition).normalized;
+        //Debug.Log($"currSpell direction: {direction}");
+        return direction;
+    }
+
+    public Vector3 GetDirectedSpellSpawnPoint()
+    {
+        var direction = GetDirectedSpellDirection(out var playerPos);
+        return (playerPos + direction) * spellSpawnPointDistance;
+    }
 }

@@ -5,10 +5,10 @@ using UnityEngine;
 
 public class PlayerFollowing : MonoBehaviour
 {
-    public Transform playerTransform;
-    public Vector3 cameraOffset;
-    
-    void Update()
+    [SerializeField] private Transform playerTransform;
+    [SerializeField] private Vector3 cameraOffset;
+
+    private void Update()
     {
         transform.position = playerTransform.position + cameraOffset;
     }

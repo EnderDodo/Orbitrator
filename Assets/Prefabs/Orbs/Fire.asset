@@ -20,4 +20,4 @@ MonoBehaviour:
   pickupAnalogue: {fileID: 0}
   amountInCurrentSpell: 0
   baseMaxDistance: 1
-  baseMaxCastTime: 3
+  baseMaxCastTime: 1

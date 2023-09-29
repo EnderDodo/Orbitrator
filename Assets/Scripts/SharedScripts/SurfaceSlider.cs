@@ -9,7 +9,7 @@ public class SurfaceSlider : MonoBehaviour
     private Vector3 _direction;
     private Rigidbody _rigidbody;
 
-    public void Awake()
+    private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody>();
     }

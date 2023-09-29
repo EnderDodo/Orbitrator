@@ -23,6 +23,9 @@ GameObject:
   - component: {fileID: 2751984060260237138}
   - component: {fileID: 7613652751858648868}
   - component: {fileID: 5286899947281138293}
+  - component: {fileID: 9072754366568627725}
+  - component: {fileID: 3382247679725212654}
+  - component: {fileID: 9118405729298632313}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -86,8 +89,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
-  m_Color: {r: 0.3155927, g: 0.56652594, b: 0.8490566, a: 1}
+  m_Sprite: {fileID: -1659128071, guid: 0f2df910ff79d8d41be9c6ed10bd0b69, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -171,7 +174,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b622cca68b3aee4dbb4fc4a6828c081, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  slider: {fileID: 2274606019142963632}
   speed: 5
 --- !u!114 &2274606019142963632
 MonoBehaviour:
@@ -210,8 +212,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38b74c57834c8ab439bf5223fbad8d9a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CastKey: 323
   maxSpellLength: 5
+  spellSpawnPointDistance: 1.5
 --- !u!114 &9046216415930431348
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -296,3 +298,48 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   orb: {fileID: 0}
   orbInputAction: {fileID: 8276140153097101217, guid: 3862b42b664fc774c90fd5e75de4829a, type: 3}
+--- !u!114 &9072754366568627725
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2274606019142963638}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d6e98a9744029a43a560824107a96ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &3382247679725212654
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2274606019142963638}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aae573f4655881c44980ea2dea499e36, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!95 &9118405729298632313
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2274606019142963638}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 53d4bcf3740a27c45b4cc54b3adbed7a, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

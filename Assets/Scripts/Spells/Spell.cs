@@ -134,26 +134,19 @@ public class ProjectileSpell : Spell
     {
         Debug.Log("Projectile Spell is being casted!");
         
-        var camera = Camera.main;
-        var cameraPosition = camera.transform.position;
-        var mouseWorldPosition = camera.ScreenToWorldPoint(Input.mousePosition);
-        cameraPosition.z = 0f;
-        mouseWorldPosition.z = 0f;
-        var direction = mouseWorldPosition - cameraPosition;
-        Debug.Log(direction);
-        direction.Normalize();
-        SpawnPoint = cameraPosition + direction * 1.5f;
-
-        Debug.Log($"mouse pos: {mouseWorldPosition}, camera: {cameraPosition}, spawnpoint: {SpawnPoint}");
+        var direction = SpellSystem.GetDirectedSpellDirection(out var playerPosition);
+        SpawnPoint = SpellSystem.GetDirectedSpellSpawnPoint();
         
         var speed = 0f;
         var pDamage = 0;
+        var pRadius = 0f;
         var eDamage = 0;
         var eRadius = 0f;
         foreach (ProjectileOrb orb in PrimaryOrbs)
         {
             speed += orb.baseSpeed;
             pDamage += orb.baseDamage;
+            pRadius += orb.baseRadius;
             Debug.Log(pDamage);
         }
 
@@ -180,7 +173,7 @@ public class ProjectileSpell : Spell
 
 public class SpraySpell : Spell
 {
-    public float MaxCastTime = 0f;
+    public float MaxCastTime;
 
     public SpraySpell(List<Orb> primaryOrbs, List<Orb> secondaryOrbs) : base(primaryOrbs, secondaryOrbs)
     {
@@ -223,9 +216,10 @@ public class SpraySpell : Spell
         // direction.z = 0f;
         // direction.Normalize();
         // SpawnPoint = cameraPosition + direction * 1.5f;
-        //
-        // Debug.Log($"camera: {cameraPosition}, spawnpoint: {SpawnPoint}");
         
+        var direction = SpellSystem.GetDirectedSpellDirection(out var playerPosition);
+        SpawnPoint = SpellSystem.GetDirectedSpellSpawnPoint();
+
         float speed = 0f;
         int damage = 0;
         float maxDistance = 0f;
@@ -246,17 +240,12 @@ public class SpraySpell : Spell
     private IEnumerator SpawnSprayProjectiles(GameObject sprayProjectile, float speed, int damage, float maxDistance)
     {
         var currTime = 0f;
-        var camera = Camera.main;
         
         while (currTime <= MaxCastTime)
         {
-            var cameraPosition = camera.transform.position;
-            cameraPosition.z = 0f;
-            var direction = camera.ScreenToWorldPoint(Input.mousePosition) - cameraPosition;
-            direction.z = 0f;
-            direction.Normalize();
-            SpawnPoint = cameraPosition + direction * 1.5f;
-            
+            var direction = SpellSystem.GetDirectedSpellDirection(out var playerPosition);
+            SpawnPoint = playerPosition + direction * 1.5f;
+
             var spray = UnityEngine.Object.Instantiate(sprayProjectile, SpawnPoint, Quaternion.identity);
             var stats = spray.GetComponent<SprayProjectile>();
             stats.direction = direction;
@@ -305,14 +294,9 @@ public class LaserSpell : Spell
 
     public override void Cast()
     {
-        var camera = Camera.main;
-        var cameraPosition = camera.transform.position;
-        cameraPosition.z = 0f;
-        var direction = camera.ScreenToWorldPoint(Input.mousePosition) - cameraPosition;
-        direction.z = 0f;
-        direction.Normalize();
-        SpawnPoint = cameraPosition + direction * 1.5f;
-        
+        var direction = SpellSystem.GetDirectedSpellDirection(out var playerPosition);
+        SpawnPoint = SpellSystem.GetDirectedSpellSpawnPoint();
+
         //cast mechanics like SpraySpell, but only one laser
         //and without it's direction changing continuously for a little
         base.Cast();
