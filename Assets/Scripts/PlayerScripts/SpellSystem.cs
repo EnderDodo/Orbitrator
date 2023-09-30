@@ -88,6 +88,6 @@ public class SpellSystem : MonoBehaviour
     public Vector3 GetDirectedSpellSpawnPoint()
     {
         var direction = GetDirectedSpellDirection(out var playerPos);
-        return (playerPos + direction) * spellSpawnPointDistance;
+        return playerPos + direction * spellSpawnPointDistance;
     }
 }

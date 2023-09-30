@@ -244,7 +244,7 @@ public class SpraySpell : Spell
         while (currTime <= MaxCastTime)
         {
             var direction = SpellSystem.GetDirectedSpellDirection(out var playerPosition);
-            SpawnPoint = playerPosition + direction * 1.5f;
+            SpawnPoint = SpellSystem.GetDirectedSpellSpawnPoint();
 
             var spray = UnityEngine.Object.Instantiate(sprayProjectile, SpawnPoint, Quaternion.identity);
             var stats = spray.GetComponent<SprayProjectile>();
