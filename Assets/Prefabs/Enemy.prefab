@@ -135,6 +135,7 @@ MonoBehaviour:
   slider: {fileID: 3665985744477189674}
   filling: {fileID: 4412435145490469765}
   ownerHealth: {fileID: 8120761031105286191}
+  lerpSpeed: 0.3
 --- !u!1 &2721157357595777159
 GameObject:
   m_ObjectHideFlags: 0
@@ -361,7 +362,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b622cca68b3aee4dbb4fc4a6828c081, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  slider: {fileID: 7559752282899211501}
   speed: 3
 --- !u!114 &5414271244936712401
 MonoBehaviour:
