@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,6 +11,7 @@ public abstract class Spell
     protected List<Orb> PrimaryOrbs; //should be made readonly?
     protected List<Orb> SecondaryOrbs; //should be made readonly?
     protected Vector3 SpawnPoint;
+    protected Coroutine SpellCoroutine;
     public event Action WasCasted;
     //public event Action OrbAdded;
 
@@ -27,25 +27,33 @@ public abstract class Spell
 
     public abstract Spell AddOrb(Orb orb);
 
-    public virtual void Cast()
+    public virtual void StartCast()
     {
-        foreach (var orb in PrimaryOrbs)
+        Debug.Log("Started casting spell");
+    }
+
+    public virtual void StopCast()
+    {
+        if (PrimaryOrbs != null)
         {
-            orb.amountInCurrentSpell = 0;
+            foreach (var orb in PrimaryOrbs)
+            {
+                orb.amountInCurrentSpell = 0;
+            }
+            PrimaryOrbs.Clear();
         }
 
-        foreach (var orb in SecondaryOrbs)
+        if (SecondaryOrbs != null)
         {
-            orb.amountInCurrentSpell = 0;
+            foreach (var orb in SecondaryOrbs)
+            {
+                orb.amountInCurrentSpell = 0;
+            }
+            SecondaryOrbs.Clear();
         }
 
-        PrimaryOrbs.Clear();
-        SecondaryOrbs.Clear();
         WasCasted?.Invoke();
     }
-    
-    // protected Vector3 FindDirection()
-    // {}
 
     protected Orb MainOrb()
     {
@@ -94,11 +102,17 @@ public class NullSpell : Spell
         return this;
     }
 
-    public override void Cast()
+    public override void StartCast()
     {
-        Debug.Log("Null Spell casted!");
-        //knocks back
-        //chargeable
+        Debug.Log("Null Spell started casting!");
+        // start charging
+    }
+
+    public override void StopCast()
+    {
+        Debug.Log("Null Spell stopped casting!");
+        // stop charging, knock targets back
+        base.StopCast();
     }
 }
 
@@ -130,13 +144,13 @@ public class ProjectileSpell : Spell
         return this;
     }
 
-    public override void Cast()
+    public override void StartCast()
     {
         Debug.Log("Projectile Spell is being casted!");
-        
+
         var direction = SpellSystem.GetDirectedSpellDirection(out var playerPosition);
         SpawnPoint = SpellSystem.GetDirectedSpellSpawnPoint();
-        
+
         var speed = 0f;
         var pDamage = 0;
         var pRadius = 0f;
@@ -166,8 +180,12 @@ public class ProjectileSpell : Spell
         stats.projectileDamage = pDamage;
         stats.explosionDamage = eDamage;
         stats.explosionRadius = eRadius;
+    }
 
-        base.Cast();
+    public override void StopCast()
+    {
+        // stop charging, spawn projectile with added speed and damage
+        base.StopCast();
     }
 }
 
@@ -205,7 +223,7 @@ public class SpraySpell : Spell
         return this;
     }
 
-    public override void Cast()
+    public override void StartCast()
     {
         Debug.Log("Spray Spell is being casted!");
 
@@ -216,7 +234,7 @@ public class SpraySpell : Spell
         // direction.z = 0f;
         // direction.Normalize();
         // SpawnPoint = cameraPosition + direction * 1.5f;
-        
+
         var direction = SpellSystem.GetDirectedSpellDirection(out var playerPosition);
         SpawnPoint = SpellSystem.GetDirectedSpellSpawnPoint();
 
@@ -232,15 +250,21 @@ public class SpraySpell : Spell
             maxDistance += orb.baseMaxDistance;
         }
 
-        SpellSystem.StartCoroutine(SpawnSprayProjectiles(MainOrb().instantiatedObject, speed, damage, maxDistance));
+        SpellCoroutine ??= SpellSystem.StartCoroutine(SpawnSprayProjectiles(MainOrb().instantiatedObject,
+            speed, damage,
+            maxDistance));
+    }
 
-        base.Cast();
+    public override void StopCast()
+    {
+        SpellSystem.StopCoroutine(SpellCoroutine);
+        base.StopCast();
     }
 
     private IEnumerator SpawnSprayProjectiles(GameObject sprayProjectile, float speed, int damage, float maxDistance)
     {
         var currTime = 0f;
-        
+
         while (currTime <= MaxCastTime)
         {
             var direction = SpellSystem.GetDirectedSpellDirection(out var playerPosition);
@@ -248,6 +272,7 @@ public class SpraySpell : Spell
 
             var spray = UnityEngine.Object.Instantiate(sprayProjectile, SpawnPoint, Quaternion.identity);
             var stats = spray.GetComponent<SprayProjectile>();
+            // make direction fluctuate a little
             stats.direction = direction;
             stats.speed = speed;
             stats.damage = damage;
@@ -256,8 +281,6 @@ public class SpraySpell : Spell
             currTime += Time.deltaTime;
             yield return null;
         }
-
-        //also stop when CastKeyUp
     }
 }
 
@@ -292,13 +315,18 @@ public class LaserSpell : Spell
         return this;
     }
 
-    public override void Cast()
+    public override void StartCast()
     {
         var direction = SpellSystem.GetDirectedSpellDirection(out var playerPosition);
         SpawnPoint = SpellSystem.GetDirectedSpellSpawnPoint();
 
-        //cast mechanics like SpraySpell, but only one laser
-        //and without it's direction changing continuously for a little
-        base.Cast();
+        // cast mechanics like SpraySpell, but only one laser
+        // and without it's direction changing continuously for a little
+    }
+
+    public override void StopCast()
+    {
+        // stop laser
+        base.StopCast();
     }
 }

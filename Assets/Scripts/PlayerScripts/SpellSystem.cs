@@ -34,23 +34,31 @@ public class SpellSystem : MonoBehaviour
 
         _currSpell = new NullSpell();
         Spell.SpellSystem = this;
-        _inputActions.PlayerDefault.CastSpell.performed += CastCurrentSpell;
+        _inputActions.PlayerDefault.CastSpell.performed += StartCurrentSpell;
+        _inputActions.PlayerDefault.CastSpell.canceled += StopCurrentSpell;
         _currSpell.WasCasted += ClearSpell;
     }
 
     private void ClearSpell()
     {
-        _inputActions.PlayerDefault.CastSpell.performed -= CastCurrentSpell;
+        _inputActions.PlayerDefault.CastSpell.performed -= StartCurrentSpell;
+        _inputActions.PlayerDefault.CastSpell.canceled -= StopCurrentSpell;
         _currSpell.WasCasted -= ClearSpell;
         _currSpell = new NullSpell();
         _orbsToCast.Clear();
-        _inputActions.PlayerDefault.CastSpell.performed += CastCurrentSpell;
+        _inputActions.PlayerDefault.CastSpell.performed += StartCurrentSpell;
+        _inputActions.PlayerDefault.CastSpell.canceled += StopCurrentSpell;
         _currSpell.WasCasted += ClearSpell;
     }
 
-    private void CastCurrentSpell(InputAction.CallbackContext context)
+    private void StartCurrentSpell(InputAction.CallbackContext context)
     {
-        _currSpell.Cast();
+        _currSpell.StartCast();
+    }
+
+    private void StopCurrentSpell(InputAction.CallbackContext context)
+    {
+        _currSpell.StopCast();
     }
 
     public void TryAddToSpell(OrbHolder holder) //contradicting or mixable orbs are expected
@@ -60,10 +68,12 @@ public class SpellSystem : MonoBehaviour
             {
                 _orbsToCast.Add(holder.orb);
                 holder.orb.amountInCurrentSpell++;
-                _inputActions.PlayerDefault.CastSpell.performed -= CastCurrentSpell;
+                _inputActions.PlayerDefault.CastSpell.performed -= StartCurrentSpell;
+                _inputActions.PlayerDefault.CastSpell.canceled -= StopCurrentSpell;
                 _currSpell.WasCasted -= ClearSpell;
                 _currSpell = _currSpell.AddOrb(holder.orb);
-                _inputActions.PlayerDefault.CastSpell.performed += CastCurrentSpell;
+                _inputActions.PlayerDefault.CastSpell.performed += StartCurrentSpell;
+                _inputActions.PlayerDefault.CastSpell.canceled += StopCurrentSpell;
                 _currSpell.WasCasted += ClearSpell;
                 Debug.Log("Tried to add orb to spell!");
             }
