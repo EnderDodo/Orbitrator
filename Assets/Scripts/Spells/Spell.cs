@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -27,10 +28,7 @@ public abstract class Spell
 
     public abstract Spell AddOrb(Orb orb);
 
-    public virtual void StartCast()
-    {
-        Debug.Log("Started casting spell");
-    }
+    public abstract void StartCast();
 
     public virtual void StopCast()
     {
@@ -57,7 +55,7 @@ public abstract class Spell
 
     protected Orb MainOrb()
     {
-        int biggestAmount = 0;
+        var biggestAmount = 0;
         Orb mainOrb = null;
         foreach (var orb in PrimaryOrbs)
         {
@@ -118,6 +116,9 @@ public class NullSpell : Spell
 
 public class ProjectileSpell : Spell
 {
+    public float MaxChargeTime;
+    private float _chargeSpeed;
+    private float _chargeDamage;
     public ProjectileSpell(List<Orb> primaryOrbs, List<Orb> secondaryOrbs) : base(primaryOrbs, secondaryOrbs)
     {
     }
@@ -147,45 +148,61 @@ public class ProjectileSpell : Spell
     public override void StartCast()
     {
         Debug.Log("Projectile Spell is being casted!");
+        MaxChargeTime = ((ProjectileOrb)MainOrb()).baseMaxChargeTime;
+        SpellCoroutine = SpellSystem.StartCoroutine(ChargeProjectileSpell());
+    }
 
+    public override void StopCast()
+    {
+        SpellSystem.StopCoroutine(SpellCoroutine); // return normal speed to player?
         var direction = SpellSystem.GetDirectedSpellDirection(out var playerPosition);
         SpawnPoint = SpellSystem.GetDirectedSpellSpawnPoint();
 
         var speed = 0f;
         var pDamage = 0;
-        var pRadius = 0f;
+        var pRadius = 0.5f;
         var eDamage = 0;
         var eRadius = 0f;
-        foreach (ProjectileOrb orb in PrimaryOrbs)
+        foreach (var orb1 in PrimaryOrbs)
         {
+            var orb = (ProjectileOrb)orb1;
             speed += orb.baseSpeed;
             pDamage += orb.baseDamage;
             pRadius += orb.baseRadius;
-            Debug.Log(pDamage);
+            //Debug.Log(pDamage);
         }
 
-        speed /= PrimaryOrbs.Count; //to be made chargeable later
+        speed /= PrimaryOrbs.Count;
 
         var explosionRadiusIncrease = ((ProjectileOrb)MainOrb()).baseExplosionRadius;
         foreach (var orb in SecondaryOrbs)
         {
-            eDamage += orb.baseDamage * 20;
+            eDamage += orb.baseDamage * ((ProjectileOrb)MainOrb()).explosionDamageMultiplier;
             eRadius += explosionRadiusIncrease;
         }
-
+        // spawn projectile with added speed and damage
         var projectile = UnityEngine.Object.Instantiate(MainOrb().instantiatedObject, SpawnPoint, Quaternion.identity);
         var stats = projectile.GetComponent<Projectile>();
+        projectile.transform.localScale = new Vector3(pRadius, pRadius, 1);
         stats.direction = direction;
-        stats.speed = speed;
-        stats.projectileDamage = pDamage;
+        stats.speed = speed + _chargeSpeed;
+        stats.projectileDamage = pDamage + _chargeDamage.ConvertTo<int>();
         stats.explosionDamage = eDamage;
         stats.explosionRadius = eRadius;
+        base.StopCast();
     }
 
-    public override void StopCast()
+    private IEnumerator ChargeProjectileSpell()
     {
-        // stop charging, spawn projectile with added speed and damage
-        base.StopCast();
+        var currTime = 0f;
+        while (currTime <= MaxChargeTime) // slow player down?
+        {
+            currTime += Time.deltaTime;
+            _chargeSpeed += ((ProjectileOrb)MainOrb()).chargeSpeedAddPerSec * Time.deltaTime;
+            _chargeDamage += ((ProjectileOrb)MainOrb()).chargeDamageAddPerSec * Time.deltaTime;
+            yield return null;
+        }
+        Debug.Log($"Max Charge after {currTime} s!"); // return normal speed to player?
     }
 }
 
