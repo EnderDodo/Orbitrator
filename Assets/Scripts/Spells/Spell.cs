@@ -286,6 +286,7 @@ public class SpraySpell : Spell
         {
             var direction = SpellSystem.GetDirectedSpellDirection(out var playerPosition);
             SpawnPoint = SpellSystem.GetDirectedSpellSpawnPoint();
+            var offset = new Vector3(direction.y, -direction.x, 0);
 
             var spray = UnityEngine.Object.Instantiate(sprayProjectile, SpawnPoint, Quaternion.identity);
             var stats = spray.GetComponent<SprayProjectile>();

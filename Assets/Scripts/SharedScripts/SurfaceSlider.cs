@@ -22,10 +22,9 @@ public class SurfaceSlider : MonoBehaviour
         return direction;
     }
 
-    
     private void OnCollisionStay(Collision collision)
     {
-        _normal = collision.contacts[0].normal;
+        _normal = collision.GetContact(0).normal;
     }
 
     private void OnCollisionExit(Collision collision)
@@ -33,7 +32,6 @@ public class SurfaceSlider : MonoBehaviour
         _normal = Vector3.zero;
         _rigidbody.velocity = Vector3.zero;
     }
-
 
     private void OnDrawGizmos()
     {

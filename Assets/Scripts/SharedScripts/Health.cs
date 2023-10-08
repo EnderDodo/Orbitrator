@@ -28,4 +28,12 @@ public class Health : MonoBehaviour
             
         HealthChanged?.Invoke(_currHealth);
     }
+
+    private void OnDestroy()
+    {
+        foreach (var VARIABLE in COLLECTION)
+        {
+            
+        }
+    }
 }
