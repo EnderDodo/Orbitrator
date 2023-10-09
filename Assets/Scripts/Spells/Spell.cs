@@ -159,36 +159,36 @@ public class ProjectileSpell : Spell
         SpawnPoint = SpellSystem.GetDirectedSpellSpawnPoint();
 
         var speed = 0f;
-        var pDamage = 0;
-        var pRadius = 0.5f;
-        var eDamage = 0;
-        var eRadius = 0f;
+        var projectileDamage = 0;
+        var projectileSizeIncrease = 0f;
+        var explosionDamage = 0;
+        var explosionRadius = 0f;
         foreach (var orb1 in PrimaryOrbs)
         {
             var orb = (ProjectileOrb)orb1;
             speed += orb.baseSpeed;
-            pDamage += orb.baseDamage;
-            pRadius += orb.baseRadius;
+            projectileDamage += orb.baseDamage;
+            projectileSizeIncrease += orb.projectileSizeIncrease;
             //Debug.Log(pDamage);
         }
 
         speed /= PrimaryOrbs.Count;
 
-        var explosionRadiusIncrease = ((ProjectileOrb)MainOrb()).baseExplosionRadius;
+        var explosionRadiusIncrease = ((ProjectileOrb)MainOrb()).explosionRadiusIncrease;
         foreach (var orb in SecondaryOrbs)
         {
-            eDamage += orb.baseDamage * ((ProjectileOrb)MainOrb()).explosionDamageMultiplier;
-            eRadius += explosionRadiusIncrease;
+            explosionDamage += orb.baseDamage * ((ProjectileOrb)MainOrb()).explosionDamageMultiplier;
+            explosionRadius += explosionRadiusIncrease;
         }
         // spawn projectile with added speed and damage
         var projectile = UnityEngine.Object.Instantiate(MainOrb().instantiatedObject, SpawnPoint, Quaternion.identity);
         var stats = projectile.GetComponent<Projectile>();
-        projectile.transform.localScale = new Vector3(pRadius, pRadius, 1);
+        projectile.transform.localScale += new Vector3(projectileSizeIncrease, projectileSizeIncrease, 0);
         stats.direction = direction;
         stats.speed = speed + _chargeSpeed;
-        stats.projectileDamage = pDamage + _chargeDamage.ConvertTo<int>();
-        stats.explosionDamage = eDamage;
-        stats.explosionRadius = eRadius;
+        stats.projectileDamage = projectileDamage + _chargeDamage.ConvertTo<int>();
+        stats.explosionDamage = explosionDamage;
+        stats.explosionRadius = explosionRadius;
         base.StopCast();
     }
 
@@ -255,21 +255,25 @@ public class SpraySpell : Spell
         var direction = SpellSystem.GetDirectedSpellDirection(out var playerPosition);
         SpawnPoint = SpellSystem.GetDirectedSpellSpawnPoint();
 
-        float speed = 0f;
-        int damage = 0;
-        float maxDistance = 0f;
+        var speed = 0f;
+        var damage = 0;
+        var maxDistance = 0f;
+        var projectileSizeIncrease = 0f;
+        var projectileGrowthPerSecond = 0f;
 
-        foreach (SprayOrb orb in PrimaryOrbs)
+        foreach (var orb1 in PrimaryOrbs)
         {
+            var orb = (SprayOrb)orb1;
             MaxCastTime += orb.baseMaxCastTime;
             speed += orb.baseSpeed;
             damage += orb.baseDamage;
             maxDistance += orb.baseMaxDistance;
+            projectileSizeIncrease += orb.projectileSizeIncrease;
+            projectileGrowthPerSecond += orb.projectileGrowthPerSecondIncrease;
         }
 
         SpellCoroutine ??= SpellSystem.StartCoroutine(SpawnSprayProjectiles(MainOrb().instantiatedObject,
-            speed, damage,
-            maxDistance));
+            speed, damage, maxDistance, projectileSizeIncrease, projectileGrowthPerSecond));
     }
 
     public override void StopCast()
@@ -278,23 +282,41 @@ public class SpraySpell : Spell
         base.StopCast();
     }
 
-    private IEnumerator SpawnSprayProjectiles(GameObject sprayProjectile, float speed, int damage, float maxDistance)
+    private IEnumerator SpawnSprayProjectiles(GameObject sprayProjectile, float speed, int damage, float maxDistance, float projectileSizeIncrease, float projectileGrowthPerSecond)
     {
         var currTime = 0f;
+        var currSpread = 0f;
+        var spreadAddendum = ((SprayOrb)MainOrb()).minSpread;
+        var maxSpread = ((SprayOrb)MainOrb()).maxSpread;
 
         while (currTime <= MaxCastTime)
         {
             var direction = SpellSystem.GetDirectedSpellDirection(out var playerPosition);
             SpawnPoint = SpellSystem.GetDirectedSpellSpawnPoint();
-            var offset = new Vector3(direction.y, -direction.x, 0);
+            var normal = new Vector3(direction.y, -direction.x, 0);
+            direction += normal * currSpread;
+            currSpread += spreadAddendum;
+            
+            if (spreadAddendum > 0 && currSpread >= maxSpread)
+            {
+                currSpread = maxSpread;
+                spreadAddendum = -spreadAddendum;
+            }
 
+            if (spreadAddendum < 0 && currSpread <= -maxSpread)
+            {
+                currSpread = -maxSpread;
+                spreadAddendum = -spreadAddendum;
+            }
+            
             var spray = UnityEngine.Object.Instantiate(sprayProjectile, SpawnPoint, Quaternion.identity);
             var stats = spray.GetComponent<SprayProjectile>();
-            // make direction fluctuate a little
+            sprayProjectile.transform.localScale = new Vector3(1 + projectileSizeIncrease, 1 + projectileSizeIncrease, 0);
             stats.direction = direction;
             stats.speed = speed;
             stats.damage = damage;
             stats.maxDistance = maxDistance;
+            stats.growthPerSecond = projectileGrowthPerSecond;
 
             currTime += Time.deltaTime;
             yield return null;

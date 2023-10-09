@@ -9,12 +9,18 @@ public class Projectile : MonoBehaviour
     public int projectileDamage;
     public int explosionDamage;
     public float explosionRadius;
+    private Transform _transform;
 
     //public GameObject Explosion;
 
+    private void Awake()
+    {
+        _transform = transform;
+    }
+    
     private void Update()
     {
-        transform.Translate(direction * (speed * Time.deltaTime));
+        _transform.Translate(direction * (speed * Time.deltaTime));
     }
 
     private void OnCollisionEnter(Collision collision)

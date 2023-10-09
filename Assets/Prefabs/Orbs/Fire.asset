@@ -14,10 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   priority: 3
   baseDamage: 1
-  baseSpeed: 10
+  baseSpeed: 5
   instantiatedObject: {fileID: 6435259945390452531, guid: aef6840b156adb1499065a6588abe744, type: 3}
   particleMaterial: {fileID: 0}
   pickupAnalogue: {fileID: 0}
   amountInCurrentSpell: 0
+  projectileSizeIncrease: 0.2
   baseMaxDistance: 1
   baseMaxCastTime: 1
+  projectileGrowthPerSecondIncrease: 2
+  minSpread: 0.005
+  maxSpread: 0.1
