@@ -33,8 +33,8 @@ public class PhysicsMovement : MonoBehaviour
     public void OnDrawGizmos()
     {
         var pos = transform.position;
-        var vel = _rigidBody.velocity;
-        Gizmos.color = Color.blue;
-        Gizmos.DrawLine(pos, pos + vel * 10);
+        // var vel = _rigidBody.velocity;
+        // Gizmos.color = Color.blue;
+        // Gizmos.DrawLine(pos, pos + vel * 10);
     }
 }

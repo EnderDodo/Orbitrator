@@ -62,7 +62,7 @@ public class SurfaceSlider : MonoBehaviour
         // Gizmos.DrawLine(pos, pos + _normal * 10);
         Gizmos.color = Color.red;
         Gizmos.DrawLine(pos, pos + _direction * 10);
-        Gizmos.color = Color.blue;
-        Gizmos.DrawLine(pos, pos + _rigidbody.velocity * 10);
+        // Gizmos.color = Color.blue;
+        // Gizmos.DrawLine(pos, pos + _rigidbody.velocity * 10);
     }
 }
