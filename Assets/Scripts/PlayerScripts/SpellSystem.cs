@@ -41,13 +41,9 @@ public class SpellSystem : MonoBehaviour
 
     private void ClearSpell()
     {
-        _inputActions.PlayerDefault.CastSpell.performed -= StartCurrentSpell;
-        _inputActions.PlayerDefault.CastSpell.canceled -= StopCurrentSpell;
         _currSpell.WasCasted -= ClearSpell;
         _currSpell = new NullSpell();
         _orbsToCast.Clear();
-        _inputActions.PlayerDefault.CastSpell.performed += StartCurrentSpell;
-        _inputActions.PlayerDefault.CastSpell.canceled += StopCurrentSpell;
         _currSpell.WasCasted += ClearSpell;
     }
 
@@ -68,12 +64,8 @@ public class SpellSystem : MonoBehaviour
             {
                 _orbsToCast.Add(holder.orb);
                 holder.orb.amountInCurrentSpell++;
-                _inputActions.PlayerDefault.CastSpell.performed -= StartCurrentSpell;
-                _inputActions.PlayerDefault.CastSpell.canceled -= StopCurrentSpell;
                 _currSpell.WasCasted -= ClearSpell;
                 _currSpell = _currSpell.AddOrb(holder.orb);
-                _inputActions.PlayerDefault.CastSpell.performed += StartCurrentSpell;
-                _inputActions.PlayerDefault.CastSpell.canceled += StopCurrentSpell;
                 _currSpell.WasCasted += ClearSpell;
                 Debug.Log("Tried to add orb to spell!");
             }

@@ -136,6 +136,7 @@ MonoBehaviour:
   filling: {fileID: 4412435145490469765}
   ownerHealth: {fileID: 8120761031105286191}
   lerpSpeed: 0.3
+  timeBetweenLerp: 0.02
 --- !u!1 &2721157357595777159
 GameObject:
   m_ObjectHideFlags: 0
@@ -401,6 +402,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 100
+  invincibilityTime: 3
 --- !u!1 &7264454119019283780
 GameObject:
   m_ObjectHideFlags: 0

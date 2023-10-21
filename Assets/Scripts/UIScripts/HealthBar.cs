@@ -11,8 +11,7 @@ public class HealthBar : MonoBehaviour
     [SerializeField] private Slider slider;
     [SerializeField] private Image filling;
 
-    [FormerlySerializedAs("ownerHealthScript")] [SerializeField]
-    private Health ownerHealth;
+    [SerializeField] private Health ownerHealth;
 
     [SerializeField] private float lerpSpeed = 0.3f;
     [SerializeField] private float timeBetweenLerp = 0.02f;
@@ -21,7 +20,7 @@ public class HealthBar : MonoBehaviour
 
     private void Awake()
     {
-        SetMaxHealth(ownerHealth.maxHealth);
+        SetMaxHealth(ownerHealth.GetMaxHealth());
         ownerHealth.HealthChanged += SetHealth;
         lerpWait = new WaitForSeconds(timeBetweenLerp);
     }
@@ -34,7 +33,7 @@ public class HealthBar : MonoBehaviour
         filling.color = gradient.Evaluate(1f);
     }
 
-    public void SetHealth(int currHealth)
+    public void SetHealth(int currHealth) //public because of future status effects which could tamper with health visibility
     {
         if (settingHealth != null)
             StopCoroutine(settingHealth);
@@ -43,7 +42,7 @@ public class HealthBar : MonoBehaviour
         Debug.Log(currHealth);
     }
 
-    IEnumerator LerpHealth(int currHealth)
+    private IEnumerator LerpHealth(int currHealth)
     {
         while (slider.value - currHealth > 1f)
         {
