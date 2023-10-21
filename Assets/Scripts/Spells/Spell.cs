@@ -272,7 +272,7 @@ public class SpraySpell : Spell
             projectileGrowthPerSecond += orb.projectileGrowthPerSecondIncrease;
         }
 
-        SpellCoroutine ??= SpellSystem.StartCoroutine(SpawnSprayProjectiles(MainOrb().instantiatedObject,
+        SpellCoroutine = SpellSystem.StartCoroutine(SpawnSprayProjectiles(MainOrb().instantiatedObject,
             speed, damage, maxDistance, projectileSizeIncrease, projectileGrowthPerSecond));
     }
 
