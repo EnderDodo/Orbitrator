@@ -19,6 +19,7 @@ MonoBehaviour:
   particleMaterial: {fileID: 0}
   pickupAnalogue: {fileID: 0}
   amountInCurrentSpell: 0
+  appliedEffect: {fileID: 11400000, guid: f2e512720a0cee04db1d2c6a6e367c50, type: 2}
   projectileSizeIncrease: 0.2
   baseMaxDistance: 1
   baseMaxCastTime: 1

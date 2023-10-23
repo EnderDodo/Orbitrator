@@ -14,4 +14,5 @@ public class Orb : ScriptableObject
     [SerializeField] [CanBeNull] private Material particleMaterial;
     [SerializeField] [CanBeNull] private GameObject pickupAnalogue;
     public int amountInCurrentSpell = 0;
+    [CanBeNull] public Effect appliedEffect;
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -9,6 +10,8 @@ public class Projectile : MonoBehaviour
     public int projectileDamage;
     public int explosionDamage;
     public float explosionRadius;
+    public List<Effect> projectileEffects;
+    public List<Effect> explosionEffects;
     private Transform _transform;
 
     //public GameObject Explosion;
@@ -30,7 +33,10 @@ public class Projectile : MonoBehaviour
             health.ApplyDamage(projectileDamage);
             Debug.Log($"Applied {projectileDamage} damage");
         }
-
+        if (collision.gameObject.TryGetComponent<Effectable>(out var effectable))
+        {
+            effectable.TryAddEffects(projectileEffects);
+        }
         Destroy(gameObject);
     }
 
@@ -44,6 +50,11 @@ public class Projectile : MonoBehaviour
             if (item.gameObject.TryGetComponent<Health>(out var health))
             {
                 health.ApplyDamage(explosionDamage);
+            }
+
+            if (item.gameObject.TryGetComponent<Effectable>(out var effectable))
+            {
+                effectable.TryAddEffects(explosionEffects);
             }
         }
     }

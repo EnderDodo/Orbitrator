@@ -1,11 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class PhysicsMovement : MonoBehaviour
 {
-    [SerializeField] private float speed;
+    [SerializeField] private float baseSpeed;
+    private float speed;
     private SurfaceSlider _slider;
     private Rigidbody _rigidBody;
 
@@ -13,6 +15,22 @@ public class PhysicsMovement : MonoBehaviour
     {
         _rigidBody = GetComponent<Rigidbody>();
         _slider = GetComponent<SurfaceSlider>();
+        speed = baseSpeed;
+    }
+
+    public float GetBaseSpeed()
+    {
+        return baseSpeed;
+    }
+    
+    public float GetSpeed()
+    {
+        return speed;
+    }
+
+    public void SetSpeed(float newSpeed)
+    {
+        speed = newSpeed;
     }
 
     public void Move(Vector3 direction)

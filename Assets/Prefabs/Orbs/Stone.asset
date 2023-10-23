@@ -19,9 +19,10 @@ MonoBehaviour:
   particleMaterial: {fileID: 0}
   pickupAnalogue: {fileID: 0}
   amountInCurrentSpell: 0
+  appliedEffect: {fileID: 0}
   projectileSizeIncrease: 0.3
   baseMaxChargeTime: 3
   chargeSpeedAddPerSec: 4
   chargeDamageAddPerSec: 20
-  explosionRadiusIncrease: 10
+  explosionRadiusIncrease: 2
   explosionDamageMultiplier: 20

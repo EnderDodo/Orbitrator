@@ -38,6 +38,7 @@ public abstract class Spell
             {
                 orb.amountInCurrentSpell = 0;
             }
+
             PrimaryOrbs.Clear();
         }
 
@@ -47,6 +48,7 @@ public abstract class Spell
             {
                 orb.amountInCurrentSpell = 0;
             }
+
             SecondaryOrbs.Clear();
         }
 
@@ -119,6 +121,7 @@ public class ProjectileSpell : Spell
     public float MaxChargeTime;
     private float _chargeSpeed;
     private float _chargeDamage;
+
     public ProjectileSpell(List<Orb> primaryOrbs, List<Orb> secondaryOrbs) : base(primaryOrbs, secondaryOrbs)
     {
     }
@@ -163,8 +166,11 @@ public class ProjectileSpell : Spell
         var projectileSizeIncrease = 0f;
         var explosionDamage = 0;
         var explosionRadius = 0f;
+        var projectileEffects = new List<Effect>();
+        var explosionEffects = new List<Effect>();
         foreach (var orb1 in PrimaryOrbs)
         {
+            if (orb1.appliedEffect is not null) projectileEffects = orb1.appliedEffect.AddToList(projectileEffects);
             var orb = (ProjectileOrb)orb1;
             speed += orb.baseSpeed;
             projectileDamage += orb.baseDamage;
@@ -177,9 +183,11 @@ public class ProjectileSpell : Spell
         var explosionRadiusIncrease = ((ProjectileOrb)MainOrb()).explosionRadiusIncrease;
         foreach (var orb in SecondaryOrbs)
         {
+            if (orb.appliedEffect is not null) explosionEffects = orb.appliedEffect.AddToList(explosionEffects);
             explosionDamage += orb.baseDamage * ((ProjectileOrb)MainOrb()).explosionDamageMultiplier;
             explosionRadius += explosionRadiusIncrease;
         }
+
         // spawn projectile with added speed and damage
         var projectile = UnityEngine.Object.Instantiate(MainOrb().instantiatedObject, SpawnPoint, Quaternion.identity);
         var stats = projectile.GetComponent<Projectile>();
@@ -189,19 +197,22 @@ public class ProjectileSpell : Spell
         stats.projectileDamage = projectileDamage + _chargeDamage.ConvertTo<int>();
         stats.explosionDamage = explosionDamage;
         stats.explosionRadius = explosionRadius;
+        stats.projectileEffects = projectileEffects;
+        stats.explosionEffects = explosionEffects;
         base.StopCast();
     }
 
     private IEnumerator ChargeProjectileSpell()
     {
         var currTime = 0f;
-        while (currTime <= MaxChargeTime) // slow player down?
+        while (currTime < MaxChargeTime) // slow player down?
         {
             currTime += Time.deltaTime;
             _chargeSpeed += ((ProjectileOrb)MainOrb()).chargeSpeedAddPerSec * Time.deltaTime;
             _chargeDamage += ((ProjectileOrb)MainOrb()).chargeDamageAddPerSec * Time.deltaTime;
             yield return null;
         }
+
         Debug.Log($"Max Charge after {currTime} s!"); // return normal speed to player?
     }
 }
@@ -260,9 +271,11 @@ public class SpraySpell : Spell
         var maxDistance = 0f;
         var projectileSizeIncrease = 0f;
         var projectileGrowthPerSecond = 0f;
+        var projectileEffects = new List<Effect>();
 
         foreach (var orb1 in PrimaryOrbs)
         {
+            if (orb1.appliedEffect is not null) projectileEffects = orb1.appliedEffect.AddToList(projectileEffects);
             var orb = (SprayOrb)orb1;
             MaxCastTime += orb.baseMaxCastTime;
             speed += orb.baseSpeed;
@@ -273,7 +286,7 @@ public class SpraySpell : Spell
         }
 
         SpellCoroutine = SpellSystem.StartCoroutine(SpawnSprayProjectiles(MainOrb().instantiatedObject,
-            speed, damage, maxDistance, projectileSizeIncrease, projectileGrowthPerSecond));
+            speed, damage, maxDistance, projectileSizeIncrease, projectileGrowthPerSecond, projectileEffects));
     }
 
     public override void StopCast()
@@ -282,21 +295,22 @@ public class SpraySpell : Spell
         base.StopCast();
     }
 
-    private IEnumerator SpawnSprayProjectiles(GameObject sprayProjectile, float speed, int damage, float maxDistance, float projectileSizeIncrease, float projectileGrowthPerSecond)
+    private IEnumerator SpawnSprayProjectiles(GameObject sprayProjectile, float speed, int damage, float maxDistance,
+        float projectileSizeIncrease, float projectileGrowthPerSecond, List<Effect> projectileEffects)
     {
         var currTime = 0f;
         var currSpread = 0f;
         var spreadAddendum = ((SprayOrb)MainOrb()).minSpread;
         var maxSpread = ((SprayOrb)MainOrb()).maxSpread;
 
-        while (currTime <= MaxCastTime)
+        while (currTime < MaxCastTime)
         {
             var direction = SpellSystem.GetDirectedSpellDirection(out var playerPosition);
             SpawnPoint = SpellSystem.GetDirectedSpellSpawnPoint();
             var normal = new Vector3(direction.y, -direction.x, 0);
             direction += normal * currSpread;
             currSpread += spreadAddendum;
-            
+
             if (spreadAddendum > 0 && currSpread >= maxSpread)
             {
                 currSpread = maxSpread;
@@ -308,15 +322,17 @@ public class SpraySpell : Spell
                 currSpread = -maxSpread;
                 spreadAddendum = -spreadAddendum;
             }
-            
+
             var spray = UnityEngine.Object.Instantiate(sprayProjectile, SpawnPoint, Quaternion.identity);
             var stats = spray.GetComponent<SprayProjectile>();
-            sprayProjectile.transform.localScale = new Vector3(1 + projectileSizeIncrease, 1 + projectileSizeIncrease, 0);
+            sprayProjectile.transform.localScale =
+                new Vector3(1 + projectileSizeIncrease, 1 + projectileSizeIncrease, 0);
             stats.direction = direction;
             stats.speed = speed;
             stats.damage = damage;
             stats.maxDistance = maxDistance;
             stats.growthPerSecond = projectileGrowthPerSecond;
+            stats.projectileEffects = projectileEffects;
 
             currTime += Time.deltaTime;
             yield return null;

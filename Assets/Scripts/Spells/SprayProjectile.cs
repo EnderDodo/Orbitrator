@@ -11,6 +11,7 @@ public class SprayProjectile : MonoBehaviour
     public Vector3 direction;
     public float speed;
     public int damage;
+    public List<Effect> projectileEffects;
     public float maxDistance;
     public float growthPerSecond;
     private float _currDistance;
@@ -44,6 +45,10 @@ public class SprayProjectile : MonoBehaviour
         if (other.gameObject.TryGetComponent<Health>(out var health))
         {
             health.ApplyDamage(damage);
+        }
+        if (other.gameObject.TryGetComponent<Effectable>(out var effectable))
+        {
+            effectable.TryAddEffects(projectileEffects);
         }
 
         Destroy(gameObject);
