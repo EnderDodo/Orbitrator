@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: Freeze
   m_EditorClassIdentifier: 
   effectable: {fileID: 0}
+  particles: {fileID: 5467720993161203860, guid: 7902da629b06d3a41abec2dd5efe2c3e, type: 3}
   timeSpan: 5
   speedChangeFraction: 0.5
