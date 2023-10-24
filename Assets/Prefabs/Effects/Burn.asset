@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Burn
   m_EditorClassIdentifier: 
   effectable: {fileID: 0}
+  particles: {fileID: 9056747512541153499, guid: f142946eae00ee4498fd5987cd98b783, type: 3}
   timeSpan: 4
   healthChange: -10
   timeBetweenChanges: 1

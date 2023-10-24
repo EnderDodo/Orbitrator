@@ -12,11 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3e00951511c4389a36a41e0305d082e, type: 3}
   m_Name: Laser
   m_EditorClassIdentifier: 
-  priority: 0
-  baseDamage: 0
+  priority: 2
+  baseDamage: 1
   baseSpeed: 0
-  instantiatedObject: {fileID: 0}
+  instantiatedObject: {fileID: 7804501404523806180, guid: 27589cbf7a6cf0c4d9318b4f4ed86549, type: 3}
   particleMaterial: {fileID: 0}
   pickupAnalogue: {fileID: 0}
   amountInCurrentSpell: 0
-  baseExplosionRadius: 0
+  appliedEffect: {fileID: 0}
+  baseMaxDistance: 10
+  baseMaxCastTime: 1

@@ -154,3 +154,6 @@ MonoBehaviour:
   projectileDamage: 0
   explosionDamage: 0
   explosionRadius: 0
+  projectileEffects: []
+  explosionEffects: []
+  explosionParticleSystem: {fileID: 5037039456727238591, guid: ea647b8671758f94aab733efcf297230, type: 3}

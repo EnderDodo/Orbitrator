@@ -3,5 +3,6 @@
 [CreateAssetMenu(fileName = "New Laser Orb", menuName = "Orb/Laser Orb")]
 public class LaserOrb : Orb
 {
-    public float baseExplosionRadius;
+    public float baseMaxDistance;
+    public float baseMaxCastTime;
 }

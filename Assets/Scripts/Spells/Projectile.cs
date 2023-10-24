@@ -12,15 +12,14 @@ public class Projectile : MonoBehaviour
     public float explosionRadius;
     public List<Effect> projectileEffects;
     public List<Effect> explosionEffects;
+    [SerializeField] private GameObject explosionParticleSystem;
     private Transform _transform;
-
-    //public GameObject Explosion;
 
     private void Awake()
     {
         _transform = transform;
     }
-    
+
     private void Update()
     {
         _transform.Translate(direction * (speed * Time.deltaTime));
@@ -33,18 +32,25 @@ public class Projectile : MonoBehaviour
             health.ApplyDamage(projectileDamage);
             Debug.Log($"Applied {projectileDamage} damage");
         }
+
         if (collision.gameObject.TryGetComponent<Effectable>(out var effectable))
         {
             effectable.TryAddEffects(projectileEffects);
         }
+
         Destroy(gameObject);
     }
 
     private void OnDestroy()
     {
-        // var explosion = Instantiate(Explosion, transform.position, Quaternion.identity);
-        // explosion.Damage = ExplosionDamage;
-    
+        if (explosionRadius > 0 && explosionParticleSystem is not null)
+        {
+            var explosion = Instantiate(explosionParticleSystem, _transform.position, Quaternion.identity);
+            var particleSys = explosion.GetComponent<ParticleSystem>();
+            var mainModule = particleSys.main;
+            mainModule.startLifetime = explosionRadius / 10;
+        }
+
         foreach (var item in Physics.OverlapSphere(transform.position, explosionRadius))
         {
             if (item.gameObject.TryGetComponent<Health>(out var health))

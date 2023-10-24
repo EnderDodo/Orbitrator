@@ -199,6 +199,7 @@ public class ProjectileSpell : Spell
         stats.explosionRadius = explosionRadius;
         stats.projectileEffects = projectileEffects;
         stats.explosionEffects = explosionEffects;
+        Debug.Log($"projSizeIncrease: {projectileSizeIncrease} \n explosionRadius: {explosionRadius}");
         base.StopCast();
     }
 
@@ -262,10 +263,7 @@ public class SpraySpell : Spell
         // direction.z = 0f;
         // direction.Normalize();
         // SpawnPoint = cameraPosition + direction * 1.5f;
-
-        var direction = SpellSystem.GetDirectedSpellDirection(out var playerPosition);
-        SpawnPoint = SpellSystem.GetDirectedSpellSpawnPoint();
-
+        
         var speed = 0f;
         var damage = 0;
         var maxDistance = 0f;
@@ -343,12 +341,14 @@ public class SpraySpell : Spell
 public class LaserSpell : Spell
 {
     public float MaxCastTime;
+    private GameObject _laser;
+    private Laser _laserScript;
 
     public LaserSpell(List<Orb> primaryOrbs, List<Orb> secondaryOrbs) : base(primaryOrbs, secondaryOrbs)
     {
     }
 
-    public override Spell AddOrb(Orb orb)
+    public override Spell AddOrb(Orb orb)   
     {
         switch (orb)
         {
@@ -361,7 +361,7 @@ public class LaserSpell : Spell
             case SprayOrb:
                 SecondaryOrbs.Add(orb);
                 orb.amountInCurrentSpell++;
-                return new SpraySpell(PrimaryOrbs, SecondaryOrbs);
+                return new LaserSpell(PrimaryOrbs, SecondaryOrbs);
             case LaserOrb:
                 PrimaryOrbs.Add(orb);
                 orb.amountInCurrentSpell++;
@@ -373,16 +373,64 @@ public class LaserSpell : Spell
 
     public override void StartCast()
     {
-        var direction = SpellSystem.GetDirectedSpellDirection(out var playerPosition);
-        SpawnPoint = SpellSystem.GetDirectedSpellSpawnPoint();
+        var damage = 0;
+        var maxDistance = 0f;
+        var effects = new List<Effect>();
+        
+        foreach (var orb1 in PrimaryOrbs)
+        {
+            if (orb1.appliedEffect is not null) effects = orb1.appliedEffect.AddToList(effects);
+            var orb = (LaserOrb)orb1;
+            damage += orb.baseDamage;
+            maxDistance += orb.baseMaxDistance;
+            MaxCastTime += orb.baseMaxCastTime;
+        }
 
-        // cast mechanics like SpraySpell, but only one laser
-        // and without it's direction changing continuously for a little
+        foreach (var orb in SecondaryOrbs)
+        {
+            if (orb.appliedEffect is not null) effects = orb.appliedEffect.AddToList(effects);
+        }
+        
+        _laser = UnityEngine.Object.Instantiate(MainOrb().instantiatedObject);
+        _laserScript = _laser.GetComponent<Laser>();
+        
+        _laserScript.maxDistance = maxDistance;
+        _laserScript.damage = damage;
+        _laserScript.effects = effects;
+        
+        SpellCoroutine = SpellSystem.StartCoroutine(ShootLaser());
     }
 
     public override void StopCast()
     {
-        // stop laser
+        SpellSystem.StopCoroutine(SpellCoroutine);
+        if (_laser is not null)
+        {
+            UnityEngine.Object.Destroy(_laser);
+        }
         base.StopCast();
+    }
+
+    private IEnumerator ShootLaser()
+    {
+        var currTime = 0f;
+
+        while (currTime < MaxCastTime)
+        {
+            var direction = SpellSystem.GetDirectedSpellDirection(out var playerPosition);
+            SpawnPoint = SpellSystem.GetDirectedSpellSpawnPoint();
+            
+            _laserScript.startingPoint = SpawnPoint;
+            _laserScript.direction = direction;
+            
+            currTime += Time.deltaTime;
+            yield return null;
+        }
+
+        if (_laser is not null)
+        {
+            UnityEngine.Object.Destroy(_laser);
+        }
+        
     }
 }
