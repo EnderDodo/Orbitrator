@@ -2,26 +2,42 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using JetBrains.Annotations;
+using Unity.VisualScripting;
 using UnityEngine;
+using Object = System.Object;
 
 
 public abstract class Effect : ScriptableObject
 {
     [HideInInspector] public Effectable effectable;
+    [SerializeField] protected GameObject particles;
+    protected GameObject CurrParticles;
     public float timeSpan;
-    public Coroutine EffectCoroutine;
-    protected float currTime = 0f;
+    protected Coroutine EffectCoroutine;
+    protected float CurrTime = 0f;
 
     public virtual void CopyDataFrom(Effect effect)
     {
+        particles = effect.particles;
         effectable = effect.effectable;
         timeSpan = effect.timeSpan;
         EffectCoroutine = effect.EffectCoroutine;
     }
-    public abstract void StartEffect();
 
-    public virtual void EndEffect()
+    public virtual void StartEffect()
     {
+        if (particles is not null)
+        {
+            CurrParticles = Instantiate(particles, effectable.transform);
+        }
+    }
+
+    public virtual void EndEffect() 
+    {
+        if (CurrParticles is not null)
+        {
+            Destroy(CurrParticles);
+        }
         if (EffectCoroutine is not null && effectable is not null)
         {
             effectable.RemoveEffect(this);
@@ -31,7 +47,7 @@ public abstract class Effect : ScriptableObject
 
     public void RefreshEffect()
     {
-        currTime = 0f;
+        CurrTime = 0f;
     }
 
     public List<Effect> AddToList(List<Effect> list)

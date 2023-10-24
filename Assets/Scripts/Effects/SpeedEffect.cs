@@ -16,6 +16,7 @@ public class SpeedEffect : Effect
 
     public override void StartEffect()
     {
+        base.StartEffect();
         EffectCoroutine = effectable.StartCoroutine(ChangeSpeedByFraction());
     }
 
@@ -30,9 +31,9 @@ public class SpeedEffect : Effect
     {
         if (effectable.TryGetComponent(out _physicsMovement))
             _physicsMovement.SetSpeed(_physicsMovement.GetSpeed() * speedChangeFraction);
-        while (currTime < timeSpan)
+        while (CurrTime < timeSpan)
         {
-            currTime += Time.deltaTime;
+            CurrTime += Time.deltaTime;
             yield return null;
         }
         EndEffect();

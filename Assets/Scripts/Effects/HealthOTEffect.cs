@@ -18,6 +18,7 @@ public class HealthOTEffect : Effect
 
     public override void StartEffect()
     {
+        base.StartEffect();
         EffectCoroutine = effectable.StartCoroutine(ChangeHealthOverTime());
     }
 
@@ -30,20 +31,20 @@ public class HealthOTEffect : Effect
     {
         if (effectable.TryGetComponent<Health>(out var effectedHealth))
         {
-            while (currTime < timeSpan)
+            while (CurrTime < timeSpan)
             {
                 effectedHealth.ApplyDamage(-healthChange);
 
-                currTime += timeBetweenChanges;
+                CurrTime += timeBetweenChanges;
                 yield return new WaitForSeconds(timeBetweenChanges);
             }
         }
 
         else
         {
-            while (currTime < timeSpan)
+            while (CurrTime < timeSpan)
             {
-                currTime += timeBetweenChanges;
+                CurrTime += timeBetweenChanges;
                 yield return new WaitForSeconds(timeBetweenChanges);
             }
         }
