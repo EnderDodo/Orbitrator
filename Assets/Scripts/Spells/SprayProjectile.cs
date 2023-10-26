@@ -42,6 +42,10 @@ public class SprayProjectile : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.TryGetComponent<SprayProjectile>(out var sprayProjectile)) return;
+        if (other.gameObject.TryGetComponent<TargetTooCloseHandler>(out var a)) return;
+        if (other.gameObject.TryGetComponent<TargetTooFarHandler>(out var s)) return;
+        if (other.gameObject.TryGetComponent<PlayerDetection>(out var d)) return;
+        if (other.gameObject.TryGetComponent<TargetInPerfectAttackRangeHandler>(out var f)) return;
         if (other.gameObject.TryGetComponent<Health>(out var health))
         {
             health.ApplyDamage(damage);
