@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4827283074914754369}
   - component: {fileID: 6664705328511057421}
   - component: {fileID: 2403009972781114222}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: TargetAttackInnerTrigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -80,7 +80,7 @@ GameObject:
   - component: {fileID: 3839816372165776813}
   - component: {fileID: 7674367975386308880}
   - component: {fileID: 6880689528518482273}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: PlayerDetector
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -148,7 +148,7 @@ GameObject:
   - component: {fileID: 2917697523003924361}
   - component: {fileID: 1343757459922246400}
   - component: {fileID: 106157051825138998}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: TargetAttackOuterTrigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -217,7 +217,7 @@ GameObject:
   - component: {fileID: 1505109522020177437}
   - component: {fileID: 2580510254783855377}
   - component: {fileID: 6526496538986622545}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: TargetAttackPerfectRangeTrigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -284,7 +284,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8672506193046710472}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: TargetTriggers
   m_TagString: Untagged
   m_Icon: {fileID: 0}
