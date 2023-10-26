@@ -52,7 +52,8 @@ public abstract class EnemyAttack : MonoBehaviour
 
     protected virtual void StopAttacking()
     {
-        StopCoroutine(_attackCoroutine);
+        if (_attackCoroutine is not null)
+            StopCoroutine(_attackCoroutine);
     }
 
     protected IEnumerator AttackAndWaitForRecharge()
