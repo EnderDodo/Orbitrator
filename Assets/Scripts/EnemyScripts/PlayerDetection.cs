@@ -1,18 +1,20 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerDetection : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Awake()
-    {
-        
-    }
+    private GameObject _target;
 
-    // Update is called once per frame
-    void Update()
+    public Action<GameObject> TargetDetected;
+    
+    private void OnTriggerEnter(Collider other)
     {
-        
+        if (other.CompareTag("Player"))
+        {
+            _target = other.gameObject;
+            TargetDetected?.Invoke(_target);
+        }
     }
 }
